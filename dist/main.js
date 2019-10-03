@@ -12,3 +12,4 @@ class Student {
 function greeter(person) {
     return "Hello, " + person.firstName + " " + person.lastName;
 }
+console.log('--jquery', jQuery);

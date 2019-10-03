@@ -1,5 +1,7 @@
 import {StandardMap} from './map.js';
 
+declare var jQuery: any;
+
 const map = new StandardMap();
 map.init();
 
@@ -18,5 +20,7 @@ interface Person {
 function greeter(person: Person) {
     return "Hello, " + person.firstName + " " + person.lastName;
 }
+
+console.log('--jquery', jQuery);
 
 
