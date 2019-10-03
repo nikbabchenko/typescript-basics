@@ -1,4 +1,4 @@
-import {StandardMap} from './map.js';
+import {StandardMap} from './map';
 
 const map = new StandardMap();
 map.init();
@@ -19,4 +19,20 @@ function greeter(person: Person) {
     return "Hello, " + person.firstName + " " + person.lastName;
 }
 
+interface FakePerson {
+    firstName: string;
+    lastName: string;
+}
+
+
+class FakeStudent implements FakePerson {
+    fullName: string;
+    constructor(public firstName: string, public middleInitial: string, public lastName: string) {
+        this.fullName = firstName + " " + middleInitial + " " + lastName;
+    }
+}
+
+const john = new Student("John", "Mr.", "Doe");
+
+document.body.innerText = greeter(<FakePerson>john);
 
