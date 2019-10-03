@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "outDir": "./dist",
+        "module": "esnext"
+    },
+    "files": ["./src/main.ts"]
+}
