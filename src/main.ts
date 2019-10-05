@@ -32,7 +32,8 @@ class FakeStudent implements FakePerson {
     }
 }
 
-const john = new Student("John", "Mr.", "Doe");
+const john = new FakeStudent("John", "Mr.", "Doe");
+const ivan = new Student("Ivan", "Mr.", "Doe");
 
 document.body.innerText = greeter(<FakePerson>john);
 
