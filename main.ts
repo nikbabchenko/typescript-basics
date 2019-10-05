@@ -1,17 +1,26 @@
-// Generics
-function makeRequest<T>(url: string):Promise<T> {
-    return fetch(url).then(resp => resp.json());
+class BeeKeeper {
+    hasMask: boolean;
 }
 
-interface Todo {
-    userId: number;
-    id: number;
-    title: string;
-    completed: boolean;
+class ZooKeeper {
+    nametag: string;
 }
 
-const fetchTodo = (id: number) => makeRequest<Todo>(`https://jsonplaceholder.typicode.com/todos/${id}`);
+class Animal {
+    numLegs: number;
+}
 
-fetchTodo(1).then(todo => {
-    console.log('--fetched TODO', todo);
-})
+class Bee extends Animal {
+    keeper: BeeKeeper;
+}
+
+class Lion extends Animal {
+    keeper: ZooKeeper;
+}
+
+function createInstance<A extends Animal>(c: new () => A): A {
+    return new c();
+}
+
+createInstance(Lion).keeper.nametag;  // typechecks!
+createInstance(Bee).keeper.hasMask;   // typechecks!
