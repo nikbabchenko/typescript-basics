@@ -7,21 +7,8 @@ const images = Array(7)
     .map((i, index) => `${index + 1}.jpeg`); // [1.jpeg, 2.jpeg ...]
 // Simple Slider Template
 const simpleSliderTemplate = (source) => `
-    <img src="${source}" alt="" />
+   <img src="${source}" alt="" />
 `;
-const textSliderTemplate = (textSlide) => `
-<section class="hero is-medium ${textSlide.baseClass ? textSlide.baseClass : "is-primary"} is-bold">
-    <div class="hero-body">
-    <div class="container">
-        <h1 class="title">
-        ${textSlide.title}
-        </h1>
-        <h2 class="subtitle">
-        ${textSlide.subtitle}
-        </h2>
-    </div>
-    </div>
-</section>`;
 const createDOMElFromString = (domstring) => {
     const html = new DOMParser().parseFromString(domstring, "text/html");
     return html.body.firstChild;
@@ -35,19 +22,13 @@ class BaseSlider {
         this.slides = [];
         this.el = document.querySelector(selector);
     }
+    // TODO: next and previous methods need to be fixed
+    // when slides index > slides.length you can see empty slide
     next() {
-        const nextSlide = ++this.currentIndex;
-        if (nextSlide >= this.slides.length) {
-            this.currentIndex = 0;
-        }
-        this.showSlide(this.currentIndex);
+        this.showSlide(++this.currentIndex);
     }
     previous() {
-        const nextSlide = --this.currentIndex;
-        if (nextSlide < 0) {
-            this.currentIndex = this.slides.length - 1;
-        }
-        this.showSlide(this.currentIndex);
+        this.showSlide(--this.currentIndex);
     }
     showSlide(index) {
         this.slides.forEach((item, i) => {
@@ -63,9 +44,9 @@ class BaseSlider {
         buttonsContainer.classList.add("navigation");
         buttonsContainer.classList.add("has-text-centered");
         buttonsContainer.innerHTML = `
-        <button class="prev button is-info">Previous</button>
-        <button class="next button is-info">Next</button>
-      `;
+       <button class="prev button is-info">Previous</button>
+       <button class="next button is-info">Next</button>
+     `;
         const prevButton = buttonsContainer.querySelector(".prev");
         const nextButton = buttonsContainer.querySelector(".next");
         prevButton.addEventListener("click", () => this.previous());
@@ -99,46 +80,41 @@ class SimpleSlider extends BaseSlider {
         }
     }
 }
-class TextSlider extends BaseSlider {
-    constructor(selector) {
-        super(selector);
+const textSlides = [
+    {
+        title: 'Angular',
+        subtitle: 'is awesome'
+    },
+    {
+        title: 'Typescript',
+        subtitle: 'is awesome',
+        baseClass: 'is-info'
+    },
+    {
+        title: 'Lorem Ipsum',
+        subtitle: 'dolorem',
+        baseClass: 'is-success'
     }
-    addSlides(images) {
-        if (Array.isArray(images)) {
-            const sliderTemplate = (title, subtitle, baseClass) => {
-                const imgString = textSliderTemplate({
-                    title,
-                    subtitle,
-                    baseClass
-                });
-                return createDOMElFromString(imgString);
-            };
-            this.slides = images.map((item, index) => sliderTemplate(`Hello ${index}`, "subtitle", index % 2 === 0 ? "is-success" : "is-primary"));
-        }
-    }
+];
+const textSliderTemplate = (textSlide) => `
+<section class="hero is-medium ${textSlide.baseClass ? textSlide.baseClass : "is-primary"} is-bold">
+   <div class="hero-body">
+   <div class="container">
+       <h1 class="title">
+       ${textSlide.title}
+       </h1>
+       <h2 class="subtitle">
+       ${textSlide.subtitle}
+       </h2>
+   </div>
+   </div>
+</section>`;
+// should extend abstract class BaseSlider
+class TextSlider {
 }
-class AutomaticSlider extends SimpleSlider {
-    constructor(selector) {
-        super(selector, false);
-    }
-    render() {
-        super.render();
-        this.next();
-    }
-    next() {
-        setTimeout(() => {
-            super.next();
-            this.next();
-        }, 3000);
-    }
+class AutomaticSlider {
 }
-const simple = new SimpleSlider(".simple-slider");
-simple.addSlides(images);
-simple.render();
-const textSlider = new TextSlider(".text-slider");
-textSlider.addSlides(images);
-textSlider.render();
-const automaticSlider = new AutomaticSlider('.automatic-slider');
-automaticSlider.addSlides(images);
-automaticSlider.render();
+const simpleSlider = new SimpleSlider('.simple-slider');
+simpleSlider.addSlides(images);
+simpleSlider.render();
 //# sourceMappingURL=main.js.map

@@ -154,8 +154,8 @@
         "signature": "b209a815904a485328677714ef8c4ddd2dcf4040154fa204d25cbf31cd4ff0f3"
       },
       "../main.ts": {
-        "version": "471ef98e7d91f645ca815a0dffa077a940608d4870c151d4229f5745697cfa94",
-        "signature": "7087a4ba125bb4892b6bf68a09f4cf7be5a9da7cbd0262d5c68a87170253fa46"
+        "version": "b39e4ec0b22a665f925f3d5d7c0ef4221ef130411b8000a7b9d345d6c0e074f6",
+        "signature": "0b61ded4bdf4aea79bd97c40bcd23e10c6bd9945f7ca6b276748cda7a46fb212"
       }
     },
     "options": {
@@ -173,6 +173,7 @@
     "referencedMap": {},
     "exportedModulesMap": {},
     "semanticDiagnosticsPerFile": [
+      "../main.ts",
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.es5.d.ts",
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.es2015.d.ts",
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.es2016.d.ts",
@@ -210,8 +211,7 @@
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.es2019.symbol.d.ts",
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.esnext.intl.d.ts",
       "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.esnext.bigint.d.ts",
-      "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.esnext.full.d.ts",
-      "../main.ts"
+      "../../../../../../.npm-global/lib/node_modules/typescript/lib/lib.esnext.full.d.ts"
     ]
   },
   "version": "3.6.3"
