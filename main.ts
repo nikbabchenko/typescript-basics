@@ -108,7 +108,9 @@ class SimpleSlider extends BaseSlider {
 }
 
 
-const textSlides: TextSlide[] = [
+// TODO: add class TextSlide that implements ITextSlide
+// TODO: add elements to textSlides
+const textSlides: ITextSlide[] = [
  {
    title: 'Angular',
    subtitle: 'is awesome'
@@ -125,14 +127,14 @@ const textSlides: TextSlide[] = [
  }
 ];
 // Text Slide interface
-interface TextSlide {
+interface ITextSlide {
  title: string;
  subtitle: string;
  // TODO: add named enum for classes
  baseClass?: "is-primary" | "is-success" | "is-info";
 }
 
-const textSliderTemplate = (textSlide: TextSlide) => `
+const textSliderTemplate = (textSlide: ITextSlide) => `
 <section class="hero is-medium ${
  textSlide.baseClass ? textSlide.baseClass : "is-primary"
 } is-bold">
