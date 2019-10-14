@@ -2,7 +2,14 @@
     "compilerOptions": {
         "target": "esnext",
         "outDir": "./dist",
-        "module": "esnext"
+        "module": "esnext",
+        "lib": ["dom", "esnext"]
     },
-    "files": ["./src/main.ts"]
+    "files": ["./src/main.ts"],
+    "include": [
+        "src/*"
+    ],
+    "exclude": [
+        "src/map.ts"
+    ]
 }
