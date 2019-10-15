@@ -1,3 +1,10 @@
+/**
+ * Class method decorator LoadingCount
+ * 1. Adds loadingCount property to Class
+ * 2. Decorates  Method with returns any promise and adds counter at starting call,
+ * and decreases loadingCount value if promise failed/fullfilled
+ *
+ */
 function LoadingCount() {
   return (proto: any, _methodName: string, descriptor: PropertyDescriptor) => {
     // safety check if Class doesn't have loadingCount prop
@@ -25,7 +32,11 @@ function LoadingCount() {
   };
 }
 
+
 class Service {
+    // target === Service.prototype
+    // propertyName === "someMethod"
+    // propertyDesciptor === Object.getOwnPropertyDescriptor(Service.prototype, "someMethod")
   @LoadingCount()
   someMethod() {}
 }
