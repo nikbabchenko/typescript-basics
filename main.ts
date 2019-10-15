@@ -1,8 +1,10 @@
-export class IceCreamComponent {
+class IceCreamComponent {
   @Emoji()
   flavor = 'vanilla';
 }
 
+
+const iceCream =  new IceCreamComponent();
 
 // Property Decorator
 function Emoji() {
