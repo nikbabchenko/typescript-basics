@@ -157,12 +157,16 @@ class TextSlider {
  // TODO: finish the method addSlides
  // addSlides(slide: TextSlide[]) {
  // }
+
+ // use textSliderTemplate
 }
 
 
 class AutomaticSlider  {
  // TODO: automatic slider should be the descendant of the SimpleSlider or
  // TextSlider but with automatic slideshow and without buttons
+
+ // add next() to the render method
 }
 
 
