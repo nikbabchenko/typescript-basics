@@ -22,13 +22,16 @@ class BaseSlider {
         this.slides = [];
         this.el = document.querySelector(selector);
     }
-    // TODO: next and previous methods need to be fixed
-    // when slides index > slides.length you can see empty slide
+    nextIndex(distance) {
+        return ((this.currentIndex + distance + this.slides.length) % this.slides.length);
+    }
     next() {
-        this.showSlide(++this.currentIndex);
+        this.currentIndex = this.nextIndex(1);
+        this.showSlide(this.currentIndex);
     }
     previous() {
-        this.showSlide(--this.currentIndex);
+        this.currentIndex = this.nextIndex(-1);
+        this.showSlide(this.currentIndex);
     }
     showSlide(index) {
         this.slides.forEach((item, i) => {
@@ -55,7 +58,7 @@ class BaseSlider {
     }
     render() {
         this.slides.forEach((item, index) => {
-            item.classList.add('fadeIn'); // adds fadeIn animation
+            item.classList.add("fadeIn"); // adds fadeIn animation
             if (index !== 0) {
                 item.classList.add("is-hidden");
             }
@@ -82,18 +85,18 @@ class SimpleSlider extends BaseSlider {
 }
 const textSlides = [
     {
-        title: 'Angular',
-        subtitle: 'is awesome'
+        title: "Angular",
+        subtitle: "is awesome"
     },
     {
-        title: 'Typescript',
-        subtitle: 'is awesome',
-        baseClass: 'is-info'
+        title: "Typescript",
+        subtitle: "is awesome",
+        baseClass: "is-info"
     },
     {
-        title: 'Lorem Ipsum',
-        subtitle: 'dolorem',
-        baseClass: 'is-success'
+        title: "Lorem Ipsum",
+        subtitle: "dolorem",
+        baseClass: "is-success"
     }
 ];
 const textSliderTemplate = (textSlide) => `
@@ -109,12 +112,39 @@ const textSliderTemplate = (textSlide) => `
    </div>
    </div>
 </section>`;
-// should extend abstract class BaseSlider
-class TextSlider {
+class TextSlider extends BaseSlider {
+    constructor(selector, showButtons = true) {
+        super(selector, showButtons);
+    }
+    addSlides(slides) {
+        if (Array.isArray(images)) {
+            const sliderTemplate = (source) => {
+                const imgString = textSliderTemplate(source);
+                return createDOMElFromString(imgString);
+            };
+            this.slides = slides.map(source => sliderTemplate(source));
+        }
+    }
 }
-class AutomaticSlider {
+class AutomaticSlider extends TextSlider {
+    constructor(selector, showButtons = false) {
+        super(selector, showButtons);
+    }
+    render() {
+        super.render();
+        let t = this;
+        setInterval(function tick() {
+            t.next();
+        }, 2000);
+    }
 }
-const simpleSlider = new SimpleSlider('.simple-slider');
+const simpleSlider = new SimpleSlider(".simple-slider");
 simpleSlider.addSlides(images);
 simpleSlider.render();
+const textSlider = new TextSlider(".text-slider");
+textSlider.addSlides(textSlides);
+textSlider.render();
+const automaticSlider = new AutomaticSlider(".automatic-slider");
+automaticSlider.addSlides(textSlides);
+automaticSlider.render();
 //# sourceMappingURL=main.js.map
