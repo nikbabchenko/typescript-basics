@@ -22,8 +22,6 @@ class BaseSlider {
         this.slides = [];
         this.el = document.querySelector(selector);
     }
-    // TODO: next and previous methods need to be fixed
-    // when slides index > slides.length you can see empty slide
     next() {
         if (++this.currentIndex > this.slides.length - 1)
             this.currentIndex = 0;
