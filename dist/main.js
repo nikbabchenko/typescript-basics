@@ -25,10 +25,14 @@ class BaseSlider {
     // TODO: next and previous methods need to be fixed
     // when slides index > slides.length you can see empty slide
     next() {
-        this.showSlide(++this.currentIndex);
+        if (++this.currentIndex > this.slides.length - 1)
+            this.currentIndex = 0;
+        this.showSlide(this.currentIndex);
     }
     previous() {
-        this.showSlide(--this.currentIndex);
+        if (--this.currentIndex < 0)
+            this.currentIndex = this.slides.length - 1;
+        this.showSlide(this.currentIndex);
     }
     showSlide(index) {
         this.slides.forEach((item, i) => {
@@ -80,6 +84,8 @@ class SimpleSlider extends BaseSlider {
         }
     }
 }
+// TODO: add class TextSlide that implements ITextSlide
+// TODO: add elements to textSlides
 const textSlides = [
     {
         title: 'Angular',

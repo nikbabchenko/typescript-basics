@@ -40,11 +40,13 @@ abstract class BaseSlider {
  // when slides index > slides.length you can see empty slide
 
  public next(): void {
-   this.showSlide(++this.currentIndex);
+  if (++this.currentIndex > this.slides.length - 1) this.currentIndex = 0;
+  this.showSlide(this.currentIndex);
  }
 
  public previous(): void {
-   this.showSlide(--this.currentIndex);
+   if (--this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
+   this.showSlide(this.currentIndex);
  }
 
  protected showSlide(index: number): void {
