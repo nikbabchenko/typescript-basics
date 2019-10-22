@@ -22,13 +22,15 @@ class BaseSlider {
         this.slides = [];
         this.el = document.querySelector(selector);
     }
-    // TODO: next and previous methods need to be fixed
-    // when slides index > slides.length you can see empty slide
     next() {
-        this.showSlide(++this.currentIndex);
+        if (++this.currentIndex > this.slides.length - 1)
+            this.currentIndex = 0;
+        this.showSlide(this.currentIndex);
     }
     previous() {
-        this.showSlide(--this.currentIndex);
+        if (--this.currentIndex < 0)
+            this.currentIndex = this.slides.length - 1;
+        this.showSlide(this.currentIndex);
     }
     showSlide(index) {
         this.slides.forEach((item, i) => {
@@ -72,32 +74,43 @@ class SimpleSlider extends BaseSlider {
     }
     addSlides(images) {
         if (Array.isArray(images)) {
-            const sliderTemplate = (source) => {
-                const imgString = simpleSliderTemplate(this.imagePath + source);
+            const createSlideElement = (image) => {
+                const imgString = simpleSliderTemplate(this.imagePath + image);
                 return createDOMElFromString(imgString);
             };
-            this.slides = images.map(source => sliderTemplate(source));
+            this.slides = images.map(slide => createSlideElement(slide));
         }
     }
 }
+var TextSlideCssClass;
+(function (TextSlideCssClass) {
+    TextSlideCssClass["isPrimary"] = "is-primary";
+    TextSlideCssClass["isSuccess"] = "is-success";
+    TextSlideCssClass["isInfo"] = "is-info";
+})(TextSlideCssClass || (TextSlideCssClass = {}));
+class TextSlide {
+    constructor(init) {
+        Object.assign(this, init);
+    }
+}
 const textSlides = [
-    {
+    new TextSlide({
         title: 'Angular',
         subtitle: 'is awesome'
-    },
-    {
+    }),
+    new TextSlide({
         title: 'Typescript',
         subtitle: 'is awesome',
-        baseClass: 'is-info'
-    },
-    {
+        baseClass: TextSlideCssClass.isInfo
+    }),
+    new TextSlide({
         title: 'Lorem Ipsum',
         subtitle: 'dolorem',
-        baseClass: 'is-success'
-    }
+        baseClass: TextSlideCssClass.isSuccess
+    })
 ];
 const textSliderTemplate = (textSlide) => `
-<section class="hero is-medium ${textSlide.baseClass ? textSlide.baseClass : "is-primary"} is-bold">
+<section class="hero is-medium ${textSlide.baseClass ? textSlide.baseClass : TextSlideCssClass.isPrimary} is-bold">
    <div class="hero-body">
    <div class="container">
        <h1 class="title">
@@ -109,12 +122,33 @@ const textSliderTemplate = (textSlide) => `
    </div>
    </div>
 </section>`;
-// should extend abstract class BaseSlider
-class TextSlider {
+class TextSlider extends BaseSlider {
+    addSlides(slides) {
+        if (Array.isArray(images)) {
+            const createSlideElement = (slide) => {
+                const elementHtml = textSliderTemplate(slide);
+                return createDOMElFromString(elementHtml);
+            };
+            this.slides = slides.map(source => createSlideElement(source));
+        }
+    }
 }
-class AutomaticSlider {
+class AutomaticSlider extends TextSlider {
+    constructor(selector) {
+        super(selector, false);
+    }
+    render() {
+        setInterval(this.next.bind(this), 1000);
+        super.render();
+    }
 }
 const simpleSlider = new SimpleSlider('.simple-slider');
 simpleSlider.addSlides(images);
 simpleSlider.render();
+const textSlider = new TextSlider('.text-slider');
+textSlider.addSlides(textSlides);
+textSlider.render();
+const automaticSlider = new AutomaticSlider('.automatic-slider');
+automaticSlider.addSlides(textSlides);
+automaticSlider.render();
 //# sourceMappingURL=main.js.map

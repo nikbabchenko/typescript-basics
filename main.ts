@@ -4,9 +4,11 @@
  *  UTILS  AND TEMPLATES
  */
 
+type ImageSlide = string;
+type Slide = ImageSlide | ITextSlide;
 
  // Images for Simple slider
- const images: string[] = Array(7)
+ const images: ImageSlide[] = Array(7)
  .fill(1)
  .map((i, index) => `${index + 1}.jpeg`); // [1.jpeg, 2.jpeg ...]
 
@@ -30,21 +32,20 @@ abstract class BaseSlider {
  protected slides: HTMLElement[] = [];
 
  // TODO: add union type for slides
- abstract addSlides(slides: string[]): void;
+ abstract addSlides(slides: Slide[]): void;
 
  constructor(selector: string, private showButtons: boolean = true) {
    this.el = document.querySelector(selector);
  }
 
- // TODO: next and previous methods need to be fixed
- // when slides index > slides.length you can see empty slide
-
  public next(): void {
-   this.showSlide(++this.currentIndex);
+  if (++this.currentIndex > this.slides.length - 1) this.currentIndex = 0;
+  this.showSlide(this.currentIndex);
  }
 
  public previous(): void {
-   this.showSlide(--this.currentIndex);
+   if (--this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
+   this.showSlide(this.currentIndex);
  }
 
  protected showSlide(index: number): void {
@@ -95,48 +96,61 @@ class SimpleSlider extends BaseSlider {
    super(selector, showButtons);
  }
 
- addSlides(images: string[]) {
+ addSlides(images: ImageSlide[]) {
    if (Array.isArray(images)) {
-     const sliderTemplate = (source: string) => {
-       const imgString: string = simpleSliderTemplate(this.imagePath + source);
+     const createSlideElement = (image: ImageSlide) => {
+       const imgString: string = simpleSliderTemplate(this.imagePath + image);
        return createDOMElFromString(imgString);
      };
 
-     this.slides = images.map(source => sliderTemplate(source));
+     this.slides = images.map(slide => createSlideElement(slide));
    }
  }
 }
 
-
-// TODO: add class TextSlide that implements ITextSlide
-// TODO: add elements to textSlides
-const textSlides: ITextSlide[] = [
- {
-   title: 'Angular',
-   subtitle: 'is awesome'
- },
- {
-   title: 'Typescript',
-   subtitle: 'is awesome',
-   baseClass: 'is-info'
- },
- {
-   title: 'Lorem Ipsum',
-   subtitle: 'dolorem',
-   baseClass: 'is-success'
- }
-];
-// Text Slide interface
-interface ITextSlide {
- title: string;
- subtitle: string;
- // TODO: add named enum for classes
- baseClass?: "is-primary" | "is-success" | "is-info";
+enum TextSlideCssClass {
+  isPrimary = "is-primary",
+  isSuccess = "is-success",
+  isInfo = "is-info",
 }
 
+// Text Slide interface
+interface ITextSlide {
+  title: string;
+  subtitle: string;
+  baseClass?: TextSlideCssClass;
+ }
+
+class TextSlide implements ITextSlide {
+  title: string;
+  subtitle: string;
+  baseClass?: TextSlideCssClass;
+  
+  public constructor(init: ITextSlide) {
+    Object.assign(this, init);
+  }
+}
+
+const textSlides: TextSlide[] = [
+ new TextSlide ({
+   title: 'Angular',
+   subtitle: 'is awesome'
+ }),
+ new TextSlide ({
+   title: 'Typescript',
+   subtitle: 'is awesome',
+   baseClass: TextSlideCssClass.isInfo
+ }),
+ new TextSlide ({
+   title: 'Lorem Ipsum',
+   subtitle: 'dolorem',
+   baseClass: TextSlideCssClass.isSuccess
+ })
+];
+ 
 const textSliderTemplate = (textSlide: ITextSlide) => `
 <section class="hero is-medium ${
- textSlide.baseClass ? textSlide.baseClass : "is-primary"
+ textSlide.baseClass ? textSlide.baseClass : TextSlideCssClass.isPrimary
 } is-bold">
    <div class="hero-body">
    <div class="container">
@@ -150,27 +164,41 @@ const textSliderTemplate = (textSlide: ITextSlide) => `
    </div>
 </section>`;
 
+class TextSlider extends BaseSlider {
+ addSlides(slides: ITextSlide[]) {
+  if (Array.isArray(images)) {
+    const createSlideElement = (slide: ITextSlide) => {
+      const elementHtml: string = textSliderTemplate(slide);
+      return createDOMElFromString(elementHtml);
+    };
 
-// should extend abstract class BaseSlider
-class TextSlider {
-
- // TODO: finish the method addSlides
- // addSlides(slide: TextSlide[]) {
- // }
-
- // use textSliderTemplate
+    this.slides = slides.map(source => createSlideElement(source));
+  }
+ }
 }
 
 
-class AutomaticSlider  {
- // TODO: automatic slider should be the descendant of the SimpleSlider or
- // TextSlider but with automatic slideshow and without buttons
+class AutomaticSlider extends TextSlider {
+ constructor(selector: string) {
+  super(selector, false);
+ }
 
- // add next() to the render method
+ public render(): void {
+   setInterval(this.next.bind(this), 1000);
+   super.render();
+ }
 }
 
 
 const simpleSlider = new SimpleSlider('.simple-slider');
 simpleSlider.addSlides(images);
 simpleSlider.render();
+
+const textSlider = new TextSlider('.text-slider');
+textSlider.addSlides(textSlides);
+textSlider.render();
+
+const automaticSlider = new AutomaticSlider('.automatic-slider');
+automaticSlider.addSlides(textSlides);
+automaticSlider.render();
 
