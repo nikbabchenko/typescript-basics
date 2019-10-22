@@ -178,11 +178,15 @@ class TextSlider extends BaseSlider {
 }
 
 
-class AutomaticSlider  {
- // TODO: automatic slider should be the descendant of the SimpleSlider or
- // TextSlider but with automatic slideshow and without buttons
+class AutomaticSlider extends TextSlider {
+ constructor(selector: string) {
+  super(selector, false);
+ }
 
- // add next() to the render method
+ public render(): void {
+   setInterval(this.next.bind(this), 1000);
+   super.render();
+ }
 }
 
 
@@ -193,4 +197,8 @@ simpleSlider.render();
 const textSlider = new TextSlider('.text-slider');
 textSlider.addSlides(textSlides);
 textSlider.render();
+
+const automaticSlider = new AutomaticSlider('.automatic-slider');
+automaticSlider.addSlides(textSlides);
+automaticSlider.render();
 
