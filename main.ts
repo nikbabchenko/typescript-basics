@@ -36,9 +36,6 @@ abstract class BaseSlider {
    this.el = document.querySelector(selector);
  }
 
- // TODO: next and previous methods need to be fixed
- // when slides index > slides.length you can see empty slide
-
  public next(): void {
   if (++this.currentIndex > this.slides.length - 1) this.currentIndex = 0;
   this.showSlide(this.currentIndex);
