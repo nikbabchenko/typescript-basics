@@ -30,7 +30,7 @@ abstract class BaseSlider {
  protected slides: HTMLElement[] = [];
 
  // TODO: add union type for slides
- abstract addSlides(slides: string[]): void;
+ abstract addSlides(slides: string[] | TextSlide[]): void;
 
  constructor(selector: string, private showButtons: boolean = true) {
    this.el = document.querySelector(selector);
@@ -40,11 +40,13 @@ abstract class BaseSlider {
  // when slides index > slides.length you can see empty slide
 
  public next(): void {
-   this.showSlide(++this.currentIndex);
+   this.currentIndex = this.currentIndex === this.slides.length - 1 ? 0 : this.currentIndex + 1
+   this.showSlide(this.currentIndex);
  }
 
  public previous(): void {
-   this.showSlide(--this.currentIndex);
+   this.currentIndex = this.currentIndex === 0 ? this.slides.length - 1 : this.currentIndex - 1
+   this.showSlide(this.currentIndex);
  }
 
  protected showSlide(index: number): void {
@@ -109,29 +111,34 @@ class SimpleSlider extends BaseSlider {
 
 
 // TODO: add class TextSlide that implements ITextSlide
+
+enum TextSlideClassEnum {
+    primary = "is-primary",
+    success = "is-success",
+    info    = "is-info"
+}
+
+class TextSlide implements ITextSlide {
+    constructor(
+        public title: string,
+        public subtitle: string,
+        public baseClass?: TextSlideClassEnum,
+    ) {}
+}
+
 // TODO: add elements to textSlides
 const textSlides: ITextSlide[] = [
- {
-   title: 'Angular',
-   subtitle: 'is awesome'
- },
- {
-   title: 'Typescript',
-   subtitle: 'is awesome',
-   baseClass: 'is-info'
- },
- {
-   title: 'Lorem Ipsum',
-   subtitle: 'dolorem',
-   baseClass: 'is-success'
- }
+    new TextSlide('Angular', 'is awesome'),
+    new TextSlide('Typescript', 'is awesome', TextSlideClassEnum.info),
+    new TextSlide('Lorem Ipsum', 'dolorem', TextSlideClassEnum.success),
 ];
+
 // Text Slide interface
 interface ITextSlide {
  title: string;
  subtitle: string;
  // TODO: add named enum for classes
- baseClass?: "is-primary" | "is-success" | "is-info";
+ baseClass?: TextSlideClassEnum;
 }
 
 const textSliderTemplate = (textSlide: ITextSlide) => `
@@ -152,21 +159,33 @@ const textSliderTemplate = (textSlide: ITextSlide) => `
 
 
 // should extend abstract class BaseSlider
-class TextSlider {
+class TextSlider extends BaseSlider {
+    constructor(selector: string, showButtons = true) {
+        super(selector, showButtons);
+    }
 
- // TODO: finish the method addSlides
- // addSlides(slide: TextSlide[]) {
- // }
-
- // use textSliderTemplate
+    // TODO: finish the method addSlides
+    // use textSliderTemplate
+    addSlides(slide: TextSlide[]) {
+        const sliderTemplate = (source: TextSlide) =>
+            createDOMElFromString(textSliderTemplate(source));
+     
+        this.slides = slide.map(sliderTemplate);
+    }
 }
 
 
-class AutomaticSlider  {
- // TODO: automatic slider should be the descendant of the SimpleSlider or
- // TextSlider but with automatic slideshow and without buttons
+class AutomaticSlider extends TextSlider {
+    // TODO: automatic slider should be the descendant of the SimpleSlider or
+    // TextSlider but with automatic slideshow and without buttons
 
- // add next() to the render method
+    constructor(selector: string, showButtons = false) {
+        super(selector, showButtons);
+
+        setInterval(() => this.next(), 500)
+    }
+
+    // add next() to the render method
 }
 
 
@@ -174,3 +193,10 @@ const simpleSlider = new SimpleSlider('.simple-slider');
 simpleSlider.addSlides(images);
 simpleSlider.render();
 
+const textSlider = new TextSlider('.text-slider');
+textSlider.addSlides(textSlides);
+textSlider.render();
+
+const automaticSlider = new AutomaticSlider('.automatic-slider');
+automaticSlider.addSlides(textSlides);
+automaticSlider.render();
